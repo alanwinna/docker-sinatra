@@ -1,15 +1,20 @@
 sudo: required
-
 language: ruby
-
 services:
-  - docker
-
+- docker
 before_install:
 - docker pull carlad/sinatra
-- docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
+- docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra;
+  bundle exec foreman start;"
 - docker ps -a
 - docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
-
 script:
 - bundle exec rake test
+deploy:
+  provider: script
+  script: bash docker_push.sh
+  on:
+    branch: master
+env:
+  matrix:
+    secure: N0TrJZp3zRHa1mprHCcjjRLYO3dwSUV9Y/kzxNRip6og8CCunDca2qzu2qZcuLDW1tNAxQcGK3e0CsjLMwDEWABqnOGXCzm+5kPhA+dqgmL9DF6s2e60krc5M7DANRjw1fsMZtzaj12ZbpfSC7JE7+0OqFBXm+T4qTyVlUeUA5d3aRvPVKoWJb/Nkh4/SnD+fhha7IQrwS2vURTQWFbsuypbNbna5QhfdTQQ5cNg7yJFypOAQd1oS0xh/CGgb/UnCshvucCqvAzWeqVWlz7xemcZkxW9QWnfr8Lh4dXDi+E/ucVQz8ylBwHUoRvaUFTEh8KcqIeT4X20qSonvOQgh9+t8wrNLWPwm1NAwK77/lEhFu/XpcKFtM+9xGY5FC4t6jo8SY7/+SE/HQTNe1gjwBPKqz1olreeHQqXhBynD4EaJElMdAOhu33rnfxI/sVsFEm/PNctbAvi4IIgyfrEjcC7WRCpXJHo3oveJwRALfFyy0GYcsmhJiXFxzULDt9VxNB8R1ERNnjV/cvVgZxpIrslamlI78D0uQdVTgJG29dxtgMt9Z8SavSjY7hh/jmpcjg2G18PGnyxZfJYlQa6YtiXF2PkTodo7AL5Mw+0XElkOvQJs6Xecu+m4td12pRFi3BFdNQX2dQO4pCcp9piTRTfs5RJK4b6bHczg71ZQ4s=
